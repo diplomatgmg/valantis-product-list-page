@@ -1,19 +1,18 @@
 import React, { type FC, type ReactElement } from 'react'
 import { type Product } from '../redux/productSlice'
 
-interface ProductTableItemProps extends Product {
-
+interface ProductTableItemProps {
+  product: Product
 }
 
-const ProductTableItem: FC<ProductTableItemProps> = ({ id, product, brand, price }): ReactElement => {
-
+const ProductTableItem: FC<ProductTableItemProps> = ({ product }): ReactElement => {
   return (
     <tr>
       <th></th>
-      <th>{id}</th>
-      <th>{product}</th>
-      <th>{price}</th>
-      <th>{brand}</th>
+      <th>{product.id}</th>
+      <th>{product.product}</th>
+      <th>{product.price}</th>
+      <th>{product.brand}</th>
     </tr>
   )
 }
