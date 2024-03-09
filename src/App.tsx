@@ -1,10 +1,9 @@
 import React from 'react'
+import ProductTableList from './components/ProductTableList'
 
 const App = (): React.ReactElement => {
   return (
-    <div>
-      App component 1
-    </div>
+    <ProductTableList />
   )
 }
 
