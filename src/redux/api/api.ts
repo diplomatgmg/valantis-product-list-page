@@ -40,10 +40,37 @@ const api = createApi({
       transformResponse: (response: { result: Products }) => {
         return _.uniqBy(response.result, 'id')
       }
+    }),
+    filterFields: builder.query({
+      query: () => ({
+        url: '/',
+        method: 'POST',
+        body: {
+          action: 'get_fields'
+        }
+      }),
+      transformResponse: (response: { result: string[] }) => response.result
+    }),
+    filterValues: builder.query({
+      query: (params) => ({
+        url: '/',
+        method: 'POST',
+        body: {
+          action: 'get_fields',
+          params
+        }
+      }),
+      transformResponse: (response: { result: string[] }) => response.result
     })
+
   })
 })
 
-export const { useGetAllProductIdsQuery, useGetProductsQuery } = api
+export const {
+  useGetAllProductIdsQuery,
+  useGetProductsQuery,
+  useFilterFieldsQuery,
+  useFilterValuesQuery
+} = api
 
 export { api, API_URL, generateAuthString }
