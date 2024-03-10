@@ -1,9 +1,10 @@
-import React, { type ReactElement } from 'react'
+import React, { type ReactElement, useEffect } from 'react'
 import { Table, type TableColumnsType } from 'antd'
 import { useGetAllProductIdsQuery, useGetProductsQuery } from '../redux/api/api'
 import { type Product } from '../types'
-import { useAppSelector } from '../redux/hooks'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { LIMIT_PRODUCTS_ON_PAGE } from '../constants'
+import { setIsLoadingProducts } from '../redux/productSlice'
 
 const columns: TableColumnsType<Product> = [
   {
@@ -29,18 +30,12 @@ const columns: TableColumnsType<Product> = [
 ]
 
 const ProductTableList = (): ReactElement => {
+  const dispatch = useAppDispatch()
   const currentPage = useAppSelector(state => state.products.currentPage)
 
   const {
-    data: productIds,
-    isError: isErrorProductIds,
-    refetch: refetchProductIds
+    data: productIds
   } = useGetAllProductIdsQuery({})
-
-  if (isErrorProductIds) {
-    console.log('product ids refetch...')
-    void refetchProductIds()
-  }
 
   const productIdsForCurrentPage = productIds?.slice(
     (currentPage - 1) * LIMIT_PRODUCTS_ON_PAGE,
@@ -52,20 +47,30 @@ const ProductTableList = (): ReactElement => {
     isError: isErrorProducts,
     isLoading: isLoadingProducts,
     refetch: refetchProducts
-  } = useGetProductsQuery({ ids: productIdsForCurrentPage, skip: true })
+  } = useGetProductsQuery({ ids: productIdsForCurrentPage })
 
-  if (isErrorProducts) {
-    console.log('product fetch error')
-    void refetchProducts()
-  }
+  useEffect(() => {
+    void dispatch(setIsLoadingProducts(isLoadingProducts))
+  }, [isLoadingProducts])
+
+  useEffect(() => {
+    if (isErrorProducts) {
+      void refetchProducts()
+    }
+  }, [isErrorProducts])
+
+  const rowHeightPx = 60
 
   return (
-    <Table rowKey={(product) => product.id}
-           columns={columns}
-           dataSource={productsData}
-           loading={isLoadingProducts}
-           pagination={false}
-    />
+    <div style={{ height: rowHeightPx * LIMIT_PRODUCTS_ON_PAGE }}>
+      <Table rowKey={(product) => product.id}
+             columns={columns}
+             dataSource={productsData}
+             loading={isLoadingProducts}
+             pagination={false}
+      />
+    </div>
+
   )
 }
 
