@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import md5 from 'md5'
-import { type Product } from '../productSlice'
 import _ from 'lodash'
+import { type Products } from '../../types'
 
 const API_URL = 'https://api.valantis.store:41000/'
 
@@ -21,7 +21,7 @@ const api = createApi({
     }
   }),
   endpoints: (builder) => ({
-    getAllIds: builder.query({
+    getAllProductIds: builder.query({
       query: (params) => ({
         url: '/',
         method: 'POST',
@@ -33,7 +33,7 @@ const api = createApi({
       transformResponse: (response: { result: string[] }) =>
         Array.from(new Set(response.result))
     }),
-    getItems: builder.query({
+    getProducts: builder.query({
       query: (params) => (
         {
           url: '/',
@@ -43,12 +43,12 @@ const api = createApi({
             params
           }
         }),
-      transformResponse: (response: { result: Product[] }) =>
+      transformResponse: (response: { result: Products }) =>
         _.uniqBy(response.result, 'id')
     })
   })
 })
 //
-export const { useGetAllIdsQuery, useGetItemsQuery } = api
+export const { useGetAllProductIdsQuery, useGetProductsQuery } = api
 
 export { api, API_URL, generateAuthString }

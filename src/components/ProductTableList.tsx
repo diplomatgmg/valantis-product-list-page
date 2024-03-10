@@ -1,18 +1,51 @@
 import React, { type ReactElement } from 'react'
 import { Table } from 'react-bootstrap'
-import { useGetAllIdsQuery, useGetItemsQuery } from '../redux/api/api'
 import { LIMIT_PRODUCTS_ON_PAGE } from '../constants'
-import { type Product } from '../redux/productSlice'
 import ProductTableItem from './ProductTableItem'
+import { useGetAllProductIdsQuery, useGetProductsQuery } from '../redux/api/api'
 
 const ProductTableList = (): ReactElement => {
   const {
-    data: allProductsIdsData
-  } = useGetAllIdsQuery({ limit: LIMIT_PRODUCTS_ON_PAGE, offset: 0 })
+    data: productsIdsData,
+    isError: isErrorProductIds,
+    refetch: refetchProductIds
+  } = useGetAllProductIdsQuery({ limit: LIMIT_PRODUCTS_ON_PAGE, offset: 0 })
+
+  if (isErrorProductIds) {
+    alert('error products ids')
+    void refetchProductIds()
+  }
 
   const {
-    data: allProductsData
-  } = useGetItemsQuery({ ids: allProductsIdsData, skip: true })
+    data: productsData,
+    isLoading: isLoadingProducts,
+    isError: isErrorProducts,
+    refetch: refetchProducts
+  } = useGetProductsQuery({ ids: productsIdsData, skip: true })
+
+  if (isErrorProducts) {
+    alert('error products')
+    void refetchProducts()
+  }
+
+  const renderProducts = (): ReactElement => {
+
+    if (isLoadingProducts) {
+      const emptyProducts = Array.from({ length: LIMIT_PRODUCTS_ON_PAGE }, () => null)
+
+      return (
+        <>
+          {emptyProducts.map((emptyProduct, index) => <ProductTableItem key={index} product={emptyProduct} index={index}/>)}
+        </>
+      )
+    }
+
+    return (
+      <>
+        {productsData?.map((product, index) => <ProductTableItem key={product.id} product={product} index={index}/>)}
+      </>
+    )
+  }
 
   return (
     <Table hover>
@@ -26,13 +59,7 @@ const ProductTableList = (): ReactElement => {
       </tr>
       </thead>
       <tbody>
-      {
-        allProductsData?.map((product: Product) => (
-          <ProductTableItem key={product.id}
-                            product={product}
-          />
-        ))
-      }
+      {renderProducts()}
       </tbody>
     </Table>
   )

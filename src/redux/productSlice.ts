@@ -1,19 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
 import reducers from './reducers'
-
-interface Product {
-  id: string
-  product: string
-  brand: string | null
-  price: number
-}
+import { type Products } from '../types'
 
 interface ProductState {
-  products: Product[]
+  products: Products
+  currentPage: number
 }
 
 const initialState: ProductState = {
-  products: []
+  products: [],
+  currentPage: 1
 }
 
 const productSlice = createSlice({
@@ -23,5 +19,5 @@ const productSlice = createSlice({
 })
 
 export const { setProducts } = productSlice.actions
-export { type Product, type ProductState }
+export { type ProductState }
 export default productSlice.reducer

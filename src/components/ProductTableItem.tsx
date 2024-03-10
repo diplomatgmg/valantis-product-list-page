@@ -1,18 +1,19 @@
 import React, { type FC, type ReactElement } from 'react'
-import { type Product } from '../redux/productSlice'
+import { type Product } from '../types'
 
 interface ProductTableItemProps {
-  product: Product
+  product: Product | null
+  index: number
 }
 
-const ProductTableItem: FC<ProductTableItemProps> = ({ product }): ReactElement => {
+const ProductTableItem: FC<ProductTableItemProps> = ({ product, index }): ReactElement => {
   return (
     <tr>
-      <th></th>
-      <th>{product.id}</th>
-      <th>{product.product}</th>
-      <th>{product.price}</th>
-      <th>{product.brand}</th>
+      <th>{index + 1}</th>
+      <th>{product?.id ?? 'Loading...'}</th>
+      <th>{product?.product ?? null}</th>
+      <th>{product?.price ?? null}</th>
+      <th>{product?.brand ?? null}</th>
     </tr>
   )
 }
