@@ -1,8 +1,8 @@
-import React, { type ReactElement, useEffect } from 'react'
+import React, { type ReactElement } from 'react'
 import { useGetAllProductIdsQuery } from '../redux/api/api'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { Pagination } from 'antd'
-import { setCurrentPage, setIsLoadingProducts } from '../redux/productSlice'
+import { setCurrentPage } from '../redux/productSlice'
 import { LIMIT_PRODUCTS_ON_PAGE } from '../constants'
 
 const ProductPagination = (): ReactElement => {
