@@ -47,7 +47,7 @@ const api = createApi({
     })
   })
 })
-//
+
 export const { useGetAllProductIdsQuery, useGetProductsQuery } = api
 
 export { api, API_URL, generateAuthString }

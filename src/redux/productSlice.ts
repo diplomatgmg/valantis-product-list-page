@@ -3,12 +3,12 @@ import reducers from './reducers'
 
 interface ProductState {
   currentPage: number
-  isLoadingProducts: boolean
+  isLoading: boolean
 }
 
 const initialState: ProductState = {
   currentPage: 1,
-  isLoadingProducts: false
+  isLoading: false
 }
 
 const productSlice = createSlice({

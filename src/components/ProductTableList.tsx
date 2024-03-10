@@ -45,14 +45,13 @@ const ProductTableList = (): ReactElement => {
   const {
     data: productsData,
     isError: isErrorProducts,
-    isLoading: isLoadingProducts,
     isFetching: isFetchingProducts,
     refetch: refetchProducts
   } = useGetProductsQuery({ ids: productIdsForCurrentPage })
 
   useEffect(() => {
-    void dispatch(setIsLoadingProducts(isLoadingProducts))
-  }, [isFetchingProducts, isLoadingProducts])
+    void dispatch(setIsLoadingProducts(isFetchingProducts))
+  }, [isFetchingProducts])
 
   useEffect(() => {
     if (isErrorProducts) {
@@ -67,8 +66,8 @@ const ProductTableList = (): ReactElement => {
       <Table rowKey={(product) => product.id}
              columns={columns}
              dataSource={productsData}
-             loading={isLoadingProducts}
              pagination={false}
+             loading={isFetchingProducts}
       />
     </div>
 

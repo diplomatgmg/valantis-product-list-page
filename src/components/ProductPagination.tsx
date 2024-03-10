@@ -7,7 +7,7 @@ import { setCurrentPage, setIsLoadingProducts } from '../redux/productSlice'
 const ProductPagination = (): ReactElement => {
   const dispatch = useAppDispatch()
   const currentPage = useAppSelector((state) => state.products.currentPage)
-  const isLoadingProducts = useAppSelector((state) => state.products.isLoadingProducts)
+  const isLoadingProducts = useAppSelector((state) => state.products.isLoading)
 
   const {
     data: productIds
@@ -15,7 +15,7 @@ const ProductPagination = (): ReactElement => {
 
   useEffect(() => {
     void dispatch(setIsLoadingProducts(isLoadingProducts))
-  }, [isLoadingProducts])
+  }, [])
 
   const handleChangePage = (newPage: number): void => {
     void dispatch(setCurrentPage(newPage))
