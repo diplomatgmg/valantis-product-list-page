@@ -13,11 +13,13 @@ const handleRejectedValue = (action: unknown): boolean => {
 
 interface ErrorPayload {
   data: string
+  originalStatus: number
 }
 
 export const ErrorMiddleware: Middleware = () => (next) => (action) => {
-  if (handleRejectedValue(action)) {
-    const payloadAction = action as PayloadAction<ErrorPayload>
+  const payloadAction = action as PayloadAction<ErrorPayload>
+
+  if (handleRejectedValue(payloadAction) && payloadAction.payload.originalStatus === 500) {
     console.error(payloadAction)
 
     notification.error({
