@@ -46,12 +46,13 @@ const ProductTableList = (): ReactElement => {
     data: productsData,
     isError: isErrorProducts,
     isLoading: isLoadingProducts,
+    isFetching: isFetchingProducts,
     refetch: refetchProducts
   } = useGetProductsQuery({ ids: productIdsForCurrentPage })
 
   useEffect(() => {
     void dispatch(setIsLoadingProducts(isLoadingProducts))
-  }, [isLoadingProducts])
+  }, [isFetchingProducts, isLoadingProducts])
 
   useEffect(() => {
     if (isErrorProducts) {

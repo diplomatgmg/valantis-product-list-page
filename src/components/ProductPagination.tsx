@@ -1,9 +1,11 @@
-import React, { type ReactElement } from 'react'
-import { useGetAllProductIdsQuery, useGetProductsQuery } from '../redux/api/api'
-import { useAppSelector } from '../redux/hooks'
+import React, { type ReactElement, useEffect } from 'react'
+import { useGetAllProductIdsQuery } from '../redux/api/api'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { Pagination } from 'antd'
+import { setCurrentPage, setIsLoadingProducts } from '../redux/productSlice'
 
 const ProductPagination = (): ReactElement => {
+  const dispatch = useAppDispatch()
   const currentPage = useAppSelector((state) => state.products.currentPage)
   const isLoadingProducts = useAppSelector((state) => state.products.isLoadingProducts)
 
@@ -11,8 +13,12 @@ const ProductPagination = (): ReactElement => {
     data: productIds
   } = useGetAllProductIdsQuery({})
 
-  const handleChangePage = (): void => {
-    console.log('change page')
+  useEffect(() => {
+    void dispatch(setIsLoadingProducts(isLoadingProducts))
+  }, [isLoadingProducts])
+
+  const handleChangePage = (newPage: number): void => {
+    void dispatch(setCurrentPage(newPage))
   }
 
   return <Pagination defaultCurrent={currentPage}
