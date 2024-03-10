@@ -1,67 +1,71 @@
 import React, { type ReactElement } from 'react'
-import { Table } from 'react-bootstrap'
-import { LIMIT_PRODUCTS_ON_PAGE } from '../constants'
-import ProductTableItem from './ProductTableItem'
+import { Table, type TableColumnsType } from 'antd'
 import { useGetAllProductIdsQuery, useGetProductsQuery } from '../redux/api/api'
+import { type Product } from '../types'
+import { useAppSelector } from '../redux/hooks'
+import { LIMIT_PRODUCTS_ON_PAGE } from '../constants'
+
+const columns: TableColumnsType<Product> = [
+  {
+    title: 'ID',
+    dataIndex: 'id',
+    sorter: (a, b) => b.id.localeCompare(a.id)
+  },
+  {
+    title: 'Название',
+    dataIndex: 'product'
+  },
+  {
+    title: 'Цена',
+    dataIndex: 'price',
+    sorter: (a, b) => a.price - b.price,
+    width: '10%'
+  },
+  {
+    title: 'Бренд',
+    dataIndex: 'brand',
+    width: '10%'
+  }
+]
 
 const ProductTableList = (): ReactElement => {
+  const currentPage = useAppSelector(state => state.products.currentPage)
+
   const {
-    data: productsIdsData,
+    data: productIds,
     isError: isErrorProductIds,
     refetch: refetchProductIds
-  } = useGetAllProductIdsQuery({ limit: LIMIT_PRODUCTS_ON_PAGE, offset: 0 })
+  } = useGetAllProductIdsQuery({})
 
   if (isErrorProductIds) {
-    alert('error products ids')
+    console.log('product ids refetch...')
     void refetchProductIds()
   }
 
+  const productIdsForCurrentPage = productIds?.slice(
+    (currentPage - 1) * LIMIT_PRODUCTS_ON_PAGE,
+    currentPage * LIMIT_PRODUCTS_ON_PAGE
+  )
+
   const {
     data: productsData,
-    isLoading: isLoadingProducts,
     isError: isErrorProducts,
+    isLoading: isLoadingProducts,
     refetch: refetchProducts
-  } = useGetProductsQuery({ ids: productsIdsData, skip: true })
+  } = useGetProductsQuery({ ids: productIdsForCurrentPage, skip: true })
 
   if (isErrorProducts) {
-    alert('error products')
+    console.log('product fetch error')
     void refetchProducts()
   }
 
-  const renderProducts = (): ReactElement => {
-
-    if (isLoadingProducts) {
-      const emptyProducts = Array.from({ length: LIMIT_PRODUCTS_ON_PAGE }, () => null)
-
-      return (
-        <>
-          {emptyProducts.map((emptyProduct, index) => <ProductTableItem key={index} product={emptyProduct} index={index}/>)}
-        </>
-      )
-    }
-
-    return (
-      <>
-        {productsData?.map((product, index) => <ProductTableItem key={product.id} product={product} index={index}/>)}
-      </>
-    )
-  }
-
   return (
-    <Table hover>
-      <thead>
-      <tr key="headers">
-        <th scope="col">#</th>
-        <th scope="col">ID</th>
-        <th scope="col">Название</th>
-        <th scope="col">Цена</th>
-        <th scope="col">Бренд</th>
-      </tr>
-      </thead>
-      <tbody>
-      {renderProducts()}
-      </tbody>
-    </Table>
+    <Table rowKey={(product) => product.id}
+           columns={columns}
+           dataSource={productsData}
+           loading={isLoadingProducts}
+           pagination={false}
+    />
   )
 }
 

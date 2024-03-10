@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import md5 from 'md5'
 import _ from 'lodash'
-import { type Products } from '../../types'
+import { type ProductIds, type Products } from '../../types'
 
 const API_URL = 'https://api.valantis.store:41000/'
 
@@ -22,15 +22,14 @@ const api = createApi({
   }),
   endpoints: (builder) => ({
     getAllProductIds: builder.query({
-      query: (params) => ({
+      query: () => ({
         url: '/',
         method: 'POST',
         body: {
-          action: 'get_ids',
-          params
+          action: 'get_ids'
         }
       }),
-      transformResponse: (response: { result: string[] }) =>
+      transformResponse: (response: { result: ProductIds }) =>
         Array.from(new Set(response.result))
     }),
     getProducts: builder.query({

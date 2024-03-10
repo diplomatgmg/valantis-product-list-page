@@ -6,5 +6,6 @@ interface Product {
 }
 
 type Products = Product[]
+type ProductIds = string[]
 
-export type { Product, Products }
+export type { Product, Products, ProductIds }

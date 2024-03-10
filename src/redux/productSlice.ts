@@ -1,14 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 import reducers from './reducers'
-import { type Products } from '../types'
 
 interface ProductState {
-  products: Products
   currentPage: number
 }
 
 const initialState: ProductState = {
-  products: [],
   currentPage: 1
 }
 
@@ -18,6 +15,6 @@ const productSlice = createSlice({
   reducers
 })
 
-export const { setProducts } = productSlice.actions
+export const { setCurrentPage } = productSlice.actions
 export { type ProductState }
 export default productSlice.reducer
