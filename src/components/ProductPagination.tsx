@@ -14,15 +14,9 @@ const ProductPagination = (): ReactElement => {
     data: productIds = []
   } = useGetAllProductIdsQuery({})
 
-  useEffect(() => {
-    void dispatch(setIsLoadingProducts(isLoadingProducts))
-  }, [])
-
   const handleChangePage = (newPage: number): void => {
     void dispatch(setCurrentPage(newPage))
   }
-
-  console.log(productIds.length)
 
   return <Pagination defaultCurrent={currentPage}
                      total={productIds.length / LIMIT_PRODUCTS_ON_PAGE * 10}

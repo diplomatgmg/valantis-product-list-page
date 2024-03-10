@@ -3,10 +3,10 @@ import md5 from 'md5'
 import _ from 'lodash'
 import { type ProductIds, type Products } from '../../types'
 
-const API_URL = 'https://api.valantis.store:41000/'
+const API_URL = 'https://api.valantis.store:41000'
 
 const generateAuthString = (password: string): string => {
-  const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '')
+  const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
   const authString = `${password}_${timestamp}`
   return md5(authString)
 }
@@ -20,6 +20,7 @@ const api = createApi({
       return headers
     }
   }),
+
   endpoints: (builder) => ({
     getAllProductIds: builder.query({
       query: () => ({
@@ -29,8 +30,9 @@ const api = createApi({
           action: 'get_ids'
         }
       }),
-      transformResponse: (response: { result: ProductIds }) =>
-        Array.from(new Set(response.result))
+      transformResponse: (response: { result: ProductIds }) => {
+        return Array.from(new Set(response.result))
+      }
     }),
     getProducts: builder.query({
       query: (params) => (
@@ -42,8 +44,9 @@ const api = createApi({
             params
           }
         }),
-      transformResponse: (response: { result: Products }) =>
-        _.uniqBy(response.result, 'id')
+      transformResponse: (response: { result: Products }) => {
+        return _.uniqBy(response.result, 'id')
+      }
     })
   })
 })

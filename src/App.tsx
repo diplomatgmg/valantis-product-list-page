@@ -12,9 +12,9 @@ const App = (): React.ReactElement => {
 
   useEffect(() => {
     if (isErrorProductIds) {
-      void refetchProductIds()
+      refetchProductIds()
     }
-  }, [isErrorProductIds])
+  }, [isErrorProductIds, refetchProductIds])
 
   return (
     <Container className="mt-4">

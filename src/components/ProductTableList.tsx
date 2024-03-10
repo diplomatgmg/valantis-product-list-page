@@ -34,7 +34,8 @@ const ProductTableList = (): ReactElement => {
   const currentPage = useAppSelector(state => state.products.currentPage)
 
   const {
-    data: productIds
+    data: productIds,
+    isLoading: isLoadingProductIds
   } = useGetAllProductIdsQuery({})
 
   const productIdsForCurrentPage = productIds?.slice(
@@ -47,25 +48,25 @@ const ProductTableList = (): ReactElement => {
     isError: isErrorProducts,
     isFetching: isFetchingProducts,
     refetch: refetchProducts
-  } = useGetProductsQuery({ ids: productIdsForCurrentPage })
+  } = useGetProductsQuery({ ids: productIdsForCurrentPage }, { skip: isLoadingProductIds })
 
   useEffect(() => {
-    void dispatch(setIsLoadingProducts(isFetchingProducts))
+    dispatch(setIsLoadingProducts(isFetchingProducts))
   }, [isFetchingProducts])
 
   useEffect(() => {
     if (isErrorProducts) {
-      void refetchProducts()
+      refetchProducts()
     }
-  }, [isErrorProducts])
+  }, [isErrorProducts, refetchProducts])
 
   return (
-      <Table rowKey={(product) => product.id}
-             columns={columns}
-             dataSource={productsData}
-             pagination={false}
-             loading={isFetchingProducts}
-      />
+    <Table rowKey={(product) => product.id}
+           columns={columns}
+           dataSource={productsData}
+           pagination={false}
+           loading={isFetchingProducts}
+    />
   )
 }
 
