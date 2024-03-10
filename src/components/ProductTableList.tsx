@@ -59,18 +59,13 @@ const ProductTableList = (): ReactElement => {
     }
   }, [isErrorProducts])
 
-  const rowHeightPx = 60
-
   return (
-    <div style={{ height: rowHeightPx * LIMIT_PRODUCTS_ON_PAGE }}>
       <Table rowKey={(product) => product.id}
              columns={columns}
              dataSource={productsData}
              pagination={false}
              loading={isFetchingProducts}
       />
-    </div>
-
   )
 }
 
